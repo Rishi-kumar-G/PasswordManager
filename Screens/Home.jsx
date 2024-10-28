@@ -11,26 +11,29 @@ import {
   StatusBar,
   Pressable,
   Clipboard,
+  
   Keyboard,
   TouchableWithoutFeedback
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
 import {calculatePasswordStrength, generatePassword} from './utils';
+import { Picker } from '@react-native-picker/picker';
+const passwordCategories = ['Banking', 'Social', 'Work', 'Personal', 'Other'];
 
-// AddPassword Modal Component
 const AddPasswordModal = ({ visible, onClose, onAdd }) => {
   const [key, setKey] = useState('');
   const [password, setPassword] = useState('');
+  const [category, setCategory] = useState('Other');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState("Weak");
 
   const handleSubmit = () => {
     if (!key.trim() || !password.trim()) {
-      Alert.alert('Error', 'Both fields are required');
+      Alert.alert('Error', 'Key and password are required');
       return;
     }
-    onAdd(key, password);
+    onAdd(key, password, category);
     setKey('');
     setPassword('');
     onClose();
@@ -47,7 +50,7 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Add New Password</Text>
-            
+
             <TextInput
               style={styles.input}
               placeholder="Enter Key (e.g., Gmail, Netflix)"
@@ -56,6 +59,7 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
               onChangeText={setKey}
             />
 
+            
             <View style={styles.passwordContainer}>
               <TextInput
                 style={[styles.input, styles.passwordInput]}
@@ -88,7 +92,20 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
 
 
             </View>
-            
+
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={category}
+                onValueChange={(itemValue) => setCategory(itemValue)}
+                style={styles.pickerInput}
+                dropdownIconColor="#666"
+              >
+                {passwordCategories.map((cat) => (
+                  <Picker.Item key={cat} label={cat} value={cat} />
+                ))}
+              </Picker>
+            </View>
+
 
             <View style={styles.modalButtons}>
               <TouchableOpacity 
@@ -134,12 +151,13 @@ const HomeScreen = () => {
     }
   };
 
-  const savePassword = async (key, password) => {
+  const savePassword = async (key, password,category) => {
     try {
       const newPassword = {
         id: Date.now().toString(),
         key,
         password,
+        category,
         timestamp: new Date().toISOString()
       };
       
@@ -187,9 +205,11 @@ const HomeScreen = () => {
     }
   };
 
-  const filteredPasswords = passwords.filter(pwd =>
-    pwd.key.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredPasswords = passwords;
+  // .filter(pwd =>{
+  //   pwd.key.toLowerCase().includes(searchQuery.toLowerCase())
+  // }
+  // );
 
   const renderPasswordItem = ({ item }) => (
     <Pressable
@@ -202,13 +222,26 @@ const HomeScreen = () => {
       <View style={styles.passwordItemContent}>
         <View style={styles.passwordItemHeader}>
           <Text style={styles.passwordKey}>{item.key}</Text>
+
+
+          
+
+
           <TouchableOpacity
-            style={styles.deleteButton}
+            style={[styles.deleteButton]}
             onPress={() => deletePassword(item.id)}
           >
-            <Feather name="trash-2" size={20} color="#FF3B30" />
+            <Feather name="trash-2" size={20} color="#FF3B30" style={{}} />
           </TouchableOpacity>
+
+
+
+          
+          
         </View>
+
+        <Text style={[styles.passwordKey,{fontSize:12,color:'grey',position:'absolute',bottom:0,right:0}]}>{item.category}</Text>
+
         
         {selectedPassword?.id === item.id && (
           <View style={styles.passwordActions}>
@@ -461,6 +494,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     marginTop: 40,
+  },
+
+  categoryInput: {
+    backgroundColor: '#2C2C2C',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    color: '#fff',
+    fontSize: 16,
+  },
+  pickerInput: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
 
