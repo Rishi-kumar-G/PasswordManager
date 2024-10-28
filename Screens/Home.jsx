@@ -16,13 +16,14 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
-import {generatePassword} from './utils';
+import {calculatePasswordStrength, generatePassword} from './utils';
 
 // AddPassword Modal Component
 const AddPasswordModal = ({ visible, onClose, onAdd }) => {
   const [key, setKey] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState("Weak");
 
   const handleSubmit = () => {
     if (!key.trim() || !password.trim()) {
@@ -61,7 +62,7 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
                 placeholder="Enter Password"
                 placeholderTextColor="#666"
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(text)=>{setPassword(text),setPasswordStrength(calculatePasswordStrength(text))}}
                 secureTextEntry={!showPassword}
               />
               <TouchableOpacity 
@@ -75,9 +76,19 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
                 />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={()=>setPassword(generatePassword())}>
+            <View style={{flexDirection:'row', width:'100%'}}>
+
+            
+              {password && <Text style={{color: 'white', textAlign:'left',marginBottom:20}}>{passwordStrength}</Text>}
+            
+
+            <TouchableOpacity style={{flex:1}} onPress={()=>setPassword(generatePassword())}>
               <Text style={{color: 'white', textAlign:'right',marginBottom:20,color:'lightblue'}}>Generate Password</Text>
             </TouchableOpacity>
+
+
+            </View>
+            
 
             <View style={styles.modalButtons}>
               <TouchableOpacity 

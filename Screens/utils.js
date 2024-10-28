@@ -52,5 +52,13 @@ export function generatePassword() {
       score++;
     }
   
-    return score;
+    // Determine strength level
+    if (score <= 2) {
+      return "Weak";
+    } else if (score === 3 || score === 4) {
+      return "Medium";
+    } else {
+      return "Strong";
+    }
   }
+  
