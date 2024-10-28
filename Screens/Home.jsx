@@ -86,7 +86,7 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
               {password && <Text style={{color: 'white', textAlign:'left',marginBottom:20}}>{passwordStrength}</Text>}
             
 
-            <TouchableOpacity style={{flex:1}} onPress={()=>setPassword(generatePassword())}>
+            <TouchableOpacity style={{flex:1}} onPress={()=>setPassword(generatePassword(),setPasswordStrength(calculatePasswordStrength(password)))}>
               <Text style={{color: 'white', textAlign:'right',marginBottom:20,color:'lightblue'}}>Generate Password</Text>
             </TouchableOpacity>
 
@@ -131,6 +131,7 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
 // Home Screen Component
 const HomeScreen = () => {
   const [passwords, setPasswords] = useState([]);
+  const [resultPassword,setresultPassword] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPassword, setSelectedPassword] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -138,6 +139,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     loadPasswords();
+    
   }, []);
 
   const loadPasswords = async () => {
@@ -145,6 +147,10 @@ const HomeScreen = () => {
       const storedPasswords = await AsyncStorage.getItem('passwords');
       if (storedPasswords) {
         setPasswords(JSON.parse(storedPasswords));
+        console.log(JSON.parse(storedPasswords));
+
+        setresultPassword(JSON.parse(storedPasswords));
+        
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to load passwords');
@@ -164,6 +170,7 @@ const HomeScreen = () => {
       const updatedPasswords = [...passwords, newPassword];
       await AsyncStorage.setItem('passwords', JSON.stringify(updatedPasswords));
       setPasswords(updatedPasswords);
+      setresultPassword(updatedPasswords);
     } catch (error) {
       Alert.alert('Error', 'Failed to save password');
     }
@@ -186,6 +193,7 @@ const HomeScreen = () => {
               const updatedPasswords = passwords.filter(pwd => pwd.id !== id);
               await AsyncStorage.setItem('passwords', JSON.stringify(updatedPasswords));
               setPasswords(updatedPasswords);
+              setresultPassword(updatedPasswords);
               setSelectedPassword(null);
             } catch (error) {
               Alert.alert('Error', 'Failed to delete password');
@@ -205,11 +213,21 @@ const HomeScreen = () => {
     }
   };
 
-  const filteredPasswords = passwords;
-  // .filter(pwd =>{
-  //   pwd.key.toLowerCase().includes(searchQuery.toLowerCase())
-  // }
-  // );
+ function filteredPasswords(searchQuery){
+
+  if(searchQuery == " "){
+    setresultPassword(passwords);
+    return
+  }
+
+  setresultPassword(passwords.filter(pwd=>
+    pwd.key.toLowerCase().includes(searchQuery.toLowerCase())
+
+  ))
+
+  
+ }
+     
 
   const renderPasswordItem = ({ item }) => (
     <Pressable
@@ -288,14 +306,14 @@ const HomeScreen = () => {
             placeholder="Search passwords..."
             placeholderTextColor="#666"
             value={searchQuery}
-            onChangeText={setSearchQuery}
+            onChangeText={(text)=>{setSearchQuery(text), filteredPasswords(text)}}
             autoFocus
           />
         </View>
       )}
       
       <FlatList
-        data={filteredPasswords}
+        data={resultPassword}
         renderItem={renderPasswordItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
