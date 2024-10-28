@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
-
+import {generatePassword} from './utils';
 
 // AddPassword Modal Component
 const AddPasswordModal = ({ visible, onClose, onAdd }) => {
@@ -75,6 +75,9 @@ const AddPasswordModal = ({ visible, onClose, onAdd }) => {
                 />
               </TouchableOpacity>
             </View>
+            <TouchableOpacity onPress={()=>setPassword(generatePassword())}>
+              <Text style={{color: 'white', textAlign:'right',marginBottom:20,color:'lightblue'}}>Generate Password</Text>
+            </TouchableOpacity>
 
             <View style={styles.modalButtons}>
               <TouchableOpacity 
