@@ -40,6 +40,11 @@ expo start
 7. Tap the copy icon to copy a password to your clipboard.
 8. To delete a password, swipe left on the password item and tap the trash icon.
 
+
+## Links 
+   [link](https://drive.google.com/drive/folders/13l4O4rCQB3LdRajXr-ApckyGPPzoq1UV?usp=sharing) to videos and images of the app.
+   [apk](https://expo.dev/accounts/rishi_2005/projects/PasswordManager/builds/05e1b66d-4b2b-4ec9-af93-21c139c2331a) file of the app.
+
 ## Contributing
 
 If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request. Contributions are always welcome!
