@@ -221,7 +221,7 @@ const HomeScreen = () => {
   }
 
   setresultPassword(passwords.filter(pwd=>
-    pwd.key.toLowerCase().includes(searchQuery.toLowerCase())
+    pwd.key.toLowerCase().includes(searchQuery.toLowerCase()) || pwd.category.toLowerCase().includes(searchQuery.toLowerCase())
 
   ))
 
