@@ -42,8 +42,10 @@ expo start
 
 
 ## Links 
-   [link](https://drive.google.com/drive/folders/13l4O4rCQB3LdRajXr-ApckyGPPzoq1UV?usp=sharing) to videos and images of the app.
-   [apk](https://expo.dev/accounts/rishi_2005/projects/PasswordManager/builds/05e1b66d-4b2b-4ec9-af93-21c139c2331a) file of the app.
+[link](https://drive.google.com/drive/folders/13l4O4rCQB3LdRajXr-ApckyGPPzoq1UV?usp=sharing) to videos and images of the app.
+
+
+[apk](https://expo.dev/accounts/rishi_2005/projects/PasswordManager/builds/05e1b66d-4b2b-4ec9-af93-21c139c2331a) file of the app.
 
 ## Contributing
 
